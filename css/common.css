@@ -416,7 +416,7 @@ body.menu_open {
   top: 37%;
   font-size: 32px;
   color: #fff;
-  cursor: pointer;
+  cursor: none;
   z-index: 10000;
 }
 
@@ -491,7 +491,7 @@ body.menu_open {
 
 .menu_col ul li:not(.active) a {
   pointer-events: none;
-  cursor: default;
+  cursor: none;
 }
 
 .tickets {

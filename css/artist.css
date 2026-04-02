@@ -722,50 +722,6 @@
   background: var(--gray_01);
 }
 
-* {
-  cursor: none;
-}
-
-/* 커서 css */
-.cursor-dot {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  background: #fff;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 99999;
-  transition: opacity 0.2s;
-}
-
-.cursor-ring {
-  position: fixed;
-  width: 44px;
-  height: 44px;
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 99998;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0px;
-  font-weight: 700;
-  font-family: var(--pretendard);
-  color: #000;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  transition:
-    width 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-    height 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-    background 0.4s,
-    border-color 0.4s,
-    font-size 0.3s;
-}
-
 .cursor-ring.shop-hover {
   width: 130px;
   height: 130px;
