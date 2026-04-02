@@ -523,31 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `<div class="cursor-ring" id="cursorRing">ENTER ↗</div><div class="cursor-dot" id="cursorDot"></div>`,
   );
 
-  const ring = document.getElementById("cursorRing");
-  const dot = document.getElementById("cursorDot");
-  let mx = 0,
-    my = 0,
-    rx = window.innerWidth / 2,
-    ry = window.innerHeight / 2;
-
-  document.addEventListener("mousemove", (e) => {
-    mx = e.clientX;
-    my = e.clientY;
-    if (dot) {
-      dot.style.left = mx + "px";
-      dot.style.top = my + "px";
-    }
-  });
-  (function lerpRing() {
-    rx += (mx - rx) * 0.1;
-    ry += (my - ry) * 0.1;
-    if (ring) {
-      ring.style.left = rx + "px";
-      ring.style.top = ry + "px";
-    }
-    requestAnimationFrame(lerpRing);
-  })();
-
+  
   const glassBox = qs(".glass_box");
   if (glassBox && ring && dot) {
     glassBox.addEventListener("mouseenter", () => {
