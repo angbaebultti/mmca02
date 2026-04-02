@@ -308,4 +308,23 @@ document.addEventListener('DOMContentLoaded', () => {
       build_timeline();
     }, 200);
   });
+
+  /* ── 커스텀 커서 ── */
+  if (window.innerWidth > 480) {
+    document.body.insertAdjacentHTML('beforeend',
+      '<div class="cursor-ring" id="cursorRing">ENTER ↗</div><div class="cursor-dot" id="cursorDot"></div>'
+    );
+    const _ring = document.getElementById('cursorRing');
+    const _dot  = document.getElementById('cursorDot');
+    let _mx = 0, _my = 0, _rx = window.innerWidth / 2, _ry = window.innerHeight / 2;
+    document.addEventListener('mousemove', (e) => {
+      _mx = e.clientX; _my = e.clientY;
+      _dot.style.left = _mx + 'px'; _dot.style.top = _my + 'px';
+    });
+    (function _lerpRing() {
+      _rx += (_mx - _rx) * 0.15; _ry += (_my - _ry) * 0.15;
+      _ring.style.left = _rx + 'px'; _ring.style.top = _ry + 'px';
+      requestAnimationFrame(_lerpRing);
+    })();
+  }
 });

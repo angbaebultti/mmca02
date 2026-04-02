@@ -518,12 +518,9 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================================================
    * 13. 커서 UI
    * ========================================================= */
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `<div class="cursor-ring" id="cursorRing">ENTER ↗</div><div class="cursor-dot" id="cursorDot"></div>`,
-  );
+  const ring = document.getElementById("cursorRing");
+  const dot = document.getElementById("cursorDot");
 
-  
   const glassBox = qs(".glass_box");
   if (glassBox && ring && dot) {
     glassBox.addEventListener("mouseenter", () => {
