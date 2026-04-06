@@ -10,7 +10,7 @@ body {
   overflow-x: hidden;
 }
 
-.cube_face_img img,
+.cube_img img,
 .museum_poster img,
 .highlight_item img,
 .museum_mobile_slide img {
@@ -326,19 +326,24 @@ a {
   align-items: flex-start;
   will-change: transform;
   padding-top: 40px;
+  gap: 0;
 }
 
 .exhibit_section.side_scroll .card_item {
-  width: 100vw;
-  min-width: 100vw;
-  flex: 0 0 100vw;
+  width: 92vw;
+  min-width: 92vw;
+  flex: 0 0 92vw;
   height: auto;
   margin: 40px 0 0;
-  padding: 0 160px 80px;
+  padding: 0 120px 80px 0;
   box-sizing: border-box;
   display: flex;
   align-items: flex-start;
   gap: clamp(36px, 4vw, 80px);
+}
+
+.exhibit_section.side_scroll .exhibit_track .card_item:first-child {
+  padding-left: 140px;
 }
 
 .exhibit_section.side_scroll .card_item>.card_poster {
@@ -356,10 +361,12 @@ a {
 /* ===================== CARD LAYOUT ===================== */
 
 .card_item {
+  width: 100vw;
   display: flex;
   gap: clamp(36px, 4vw, 80px);
   margin: 40px 0 120px;
   height: auto;
+  justify-content: center;
 }
 
 .card_poster {
@@ -375,6 +382,11 @@ a {
 
 .card_content {
   flex: 1;
+}
+
+.card_inner {
+  width: 1400px;
+  display: flex;
 }
 
 .card_title {
@@ -476,13 +488,19 @@ a {
 /* ===================== HIGHLIGHTS ===================== */
 
 .card_highlights {
+  --highlight-w: 350px;
+  --highlight-h: 180px;
+  --highlight-gap: clamp(12px, 1vw, 20px);
+
   margin-top: clamp(28px, 3vw, 50px);
+  width: calc((var(--highlight-w) * 3) + (var(--highlight-gap) * 2));
 }
 
 .card_highlights strong {
   display: flex;
   align-items: center;
   gap: clamp(16px, 2vw, 40px);
+  width: 100%;
   margin-bottom: clamp(16px, 1.5vw, 24px);
   font-size: clamp(22px, 1.6vw, 30px);
   letter-spacing: 0.04em;
@@ -492,19 +510,20 @@ a {
 .card_highlights strong::after {
   content: "";
   flex: 1;
+  min-width: 0;
   height: 1px;
   background: var(--gray_03);
-  min-width: 100px;
 }
 
 .highlight_list {
   display: flex;
-  gap: clamp(12px, 1vw, 20px);
+  gap: var(--highlight-gap);
+  width: 100%;
 }
 
 .highlight_item {
-  width: 350px;
-  height: 180px;
+  width: var(--highlight-w);
+  height: var(--highlight-h);
   flex: none;
   aspect-ratio: 16 / 9;
   overflow: hidden;

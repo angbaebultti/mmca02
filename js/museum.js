@@ -1,15 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const isMobile480 = window.innerWidth <= 480;
 
   if (isMobile480) {
     const sliderItems = document.querySelectorAll(".mobile_slider_item");
-    const sections = document.querySelectorAll(".exhibit_wrap .exhibit_section[data-museum-section]");
+    const sections = document.querySelectorAll(
+      ".exhibit_wrap .exhibit_section[data-museum-section]"
+    );
 
     function changeMuseum(targetMuseum) {
       sliderItems.forEach((item) => {
         item.classList.toggle("is_active", item.dataset.museum === targetMuseum);
       });
+
       sections.forEach((section) => {
         section.classList.toggle(
           "is_mobile_active",
@@ -21,7 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
     sliderItems.forEach((item) => {
       item.addEventListener("click", () => {
         changeMuseum(item.dataset.museum);
-        item.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        item.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
       });
     });
 
@@ -38,12 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const cubeFaces = document.querySelectorAll(".cube_face");
   const topBtn = document.querySelector(".top_btn a");
   const topBtnWrap = document.querySelector(".top_btn");
-  const header = document.querySelector(".header");
 
-  if (typeof Lenis === "undefined" || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+  if (
+    typeof Lenis === "undefined" ||
+    typeof gsap === "undefined" ||
+    typeof ScrollTrigger === "undefined"
+  ) {
     console.error("[MMCA] Lenis / GSAP / ScrollTrigger 라이브러리를 먼저 로드해주세요.");
     return;
   }
+
   if (!cube || !cubeStage || !introScene || !exhibitWrap || !exhibitSections.length) {
     console.error("[MMCA] 필수 DOM 요소를 찾지 못했습니다.");
     return;
@@ -51,7 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+  const lenis = new Lenis({
+    lerp: 0.08,
+    smoothWheel: true,
+  });
+
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
@@ -61,20 +75,26 @@ document.addEventListener("DOMContentLoaded", () => {
   let isExhibitReady = false;
   let sideScrollRafId = null;
   let cubeScrollTrigger = null;
+
   const currentX = new WeakMap();
 
   const STICKY_TOP = 100;
   const NORMAL_SPEED = 0.95;
   const LAST_CARD_SPEED = 0.92;
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
 
   function hideAllExhibitSections() {
-    exhibitSections.forEach((s) => s.classList.remove("active"));
+    exhibitSections.forEach((section) => section.classList.remove("active"));
   }
 
   function cancelSideScrollAnimation() {
-    if (sideScrollRafId) { cancelAnimationFrame(sideScrollRafId); sideScrollRafId = null; }
+    if (sideScrollRafId) {
+      cancelAnimationFrame(sideScrollRafId);
+      sideScrollRafId = null;
+    }
   }
 
   function getAbsoluteTop(el) {
@@ -83,11 +103,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getFaceRotation(targetId) {
     switch (targetId) {
-      case "seoul": return 0;
-      case "deoksugung": return -90;
-      case "gwacheon": return 180;
-      case "cheongju": return 90;
-      default: return 0;
+      case "seoul":
+        return 0;
+      case "deoksugung":
+        return -90;
+      case "gwacheon":
+        return 180;
+      case "cheongju":
+        return 90;
+      default:
+        return 0;
     }
   }
 
@@ -95,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!section) return;
     const track = section.querySelector(".exhibit_track");
     if (!track) return;
+
     track.style.transform = "translate3d(0, 0, 0)";
     currentX.set(section, 0);
   }
@@ -103,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sideScrollSections.forEach((section) => {
       const track = section.querySelector(".exhibit_track");
       if (!track) return;
+
       track.style.transform = "translate3d(0, 0, 0)";
       currentX.set(section, 0);
       section.classList.remove("is_compact");
@@ -111,11 +138,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function syncSideScrollLayout(section) {
     if (!section) return;
+
     const head = section.querySelector(".exhibit_head");
     if (!head) return;
 
     const stickyHeight = Math.max(window.innerHeight - STICKY_TOP, 0);
     const headHeight = Math.ceil(head.getBoundingClientRect().height);
+
     section.style.setProperty("--museum-sticky-top", `${STICKY_TOP}px`);
     section.style.setProperty("--museum-sticky-height", `${stickyHeight}px`);
     section.style.setProperty("--museum-head-height", `${headHeight}px`);
@@ -129,7 +158,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const lastCardSpan = Math.min(window.innerWidth, maxTranslate);
     const lastCardStart = Math.max(maxTranslate - lastCardSpan, 0);
 
-    return { track, maxTranslate, lastCardSpan, lastCardStart };
+    return {
+      track,
+      maxTranslate,
+      lastCardSpan,
+      lastCardStart,
+    };
   }
 
   function getTargetX(section) {
@@ -147,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const slow = lastCardStart + (normalProgress - lastCardStart) * LAST_CARD_SPEED;
       return Math.max(0, Math.min(slow, maxTranslate));
     }
+
     return Math.max(0, Math.min(normalProgress, maxTranslate));
   }
 
@@ -175,19 +210,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function animateSideScroll() {
-    if (!isExhibitReady) { sideScrollRafId = null; return; }
+    if (!isExhibitReady) {
+      sideScrollRafId = null;
+      return;
+    }
+
     let stillMoving = false;
 
     sideScrollSections.forEach((section) => {
       if (!section.classList.contains("active")) return;
+
       const track = section.querySelector(".exhibit_track");
       if (!track) return;
+
       const target = getTargetX(section);
       const current = currentX.has(section) ? currentX.get(section) : 0;
       const next = lerp(current, target, 0.28);
+
       currentX.set(section, next);
       track.style.transform = `translate3d(${-next}px, 0, 0)`;
-      if (Math.abs(next - target) > 0.3) stillMoving = true;
+
+      if (Math.abs(next - target) > 0.3) {
+        stillMoving = true;
+      }
     });
 
     updateCompactHeader();
@@ -197,26 +242,37 @@ document.addEventListener("DOMContentLoaded", () => {
   function setupSideScrollSections(callback) {
     sideScrollSections.forEach((section) => {
       if (!section.classList.contains("active")) return;
+
       const track = section.querySelector(".exhibit_track");
       if (!track) return;
+
       syncSideScrollLayout(section);
       resetSideScrollSection(section);
+
       const totalHeight = getSideScrollHeight(section);
       section.style.height = `${totalHeight}px`;
 
       const inner = section.querySelector(".exhibit_inner");
       if (inner) inner.style.height = `${totalHeight}px`;
     });
+
     if (typeof callback === "function") callback();
   }
 
   function switchToExhibit(targetSection) {
     isExhibitReady = false;
     cancelSideScrollAnimation();
-    if (cubeScrollTrigger) { cubeScrollTrigger.kill(); cubeScrollTrigger = null; }
+
+    if (cubeScrollTrigger) {
+      cubeScrollTrigger.kill();
+      cubeScrollTrigger = null;
+    }
 
     const ring = document.getElementById("cursorRing");
-    if (ring) { ring.classList.remove("cube-hover"); ring.textContent = ""; }
+    if (ring) {
+      ring.classList.remove("cube-hover");
+      ring.textContent = "";
+    }
 
     lenis.stop();
     document.body.style.overflow = "hidden";
@@ -232,6 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
     hideAllExhibitSections();
     targetSection.classList.add("active");
     targetSection.classList.remove("is_compact");
+
     if (topBtnWrap) topBtnWrap.classList.add("active");
 
     setupSideScrollSections(() => {
@@ -240,7 +297,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const head = targetSection.querySelector(".exhibit_head");
       const headHeight = head ? head.getBoundingClientRect().height : 0;
-      const targetTop = Math.max(getAbsoluteTop(targetSection) - STICKY_TOP + headHeight * 0.3, 0);
+      const targetTop = Math.max(
+        getAbsoluteTop(targetSection) - STICKY_TOP + headHeight * 0.3,
+        0
+      );
 
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
@@ -266,18 +326,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const targetSection = document.getElementById(targetId);
 
     const ring = document.getElementById("cursorRing");
-    if (ring) { ring.classList.remove("cube-hover"); ring.textContent = ""; }
+    if (ring) {
+      ring.classList.remove("cube-hover");
+      ring.textContent = "";
+    }
 
-    if (!targetSection) { lenis.start(); isTransitioning = false; return; }
-    if (cubeScrollTrigger) { cubeScrollTrigger.kill(); cubeScrollTrigger = null; }
+    if (!targetSection) {
+      lenis.start();
+      isTransitioning = false;
+      return;
+    }
+
+    if (cubeScrollTrigger) {
+      cubeScrollTrigger.kill();
+      cubeScrollTrigger = null;
+    }
 
     cubeFaces.forEach((item) => item.classList.remove("is_active", "is_hidden"));
     face.classList.add("is_active");
-    cubeFaces.forEach((item) => { if (item !== face) item.classList.add("is_hidden"); });
+
+    cubeFaces.forEach((item) => {
+      if (item !== face) item.classList.add("is_hidden");
+    });
 
     if (window.innerWidth <= 1024) {
       switchToExhibit(targetSection);
-      gsap.fromTo(introScene,
+
+      gsap.fromTo(
+        introScene,
         { opacity: 1 },
         { opacity: 0, duration: 0.35, ease: "power2.out" }
       );
@@ -285,31 +361,58 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const rotateY = getFaceRotation(targetId);
-    gsap.timeline({
-      onStart: () => { switchToExhibit(targetSection); }
-    })
-      .to(cube, { rotateY, duration: 0.9, ease: "power2.inOut" })
-      .to(cubeStage, {
-        scale: Math.max(window.innerWidth / 1000, window.innerHeight / 560) * 1.1,
-        y: -20,
-        duration: 1.5,
-        ease: "power3.out",
-      }, "-=0.1")
-      .to(introScene, { opacity: 0, duration: 0.7, ease: "power2.out" }, "-=0.75");
+
+    gsap
+      .timeline({
+        onStart: () => switchToExhibit(targetSection),
+      })
+      .to(cube, {
+        rotateY,
+        duration: 0.9,
+        ease: "power2.inOut",
+      })
+      .to(
+        cubeStage,
+        {
+          scale: Math.max(window.innerWidth / 1000, window.innerHeight / 560) * 1.1,
+          y: -20,
+          duration: 1.5,
+          ease: "power3.out",
+        },
+        "-=0.1"
+      )
+      .to(
+        introScene,
+        {
+          opacity: 0,
+          duration: 0.7,
+          ease: "power2.out",
+        },
+        "-=0.75"
+      );
   }
 
   function triggerAutoExpand() {
     if (isTransitioning || hasTriggeredExpand) return;
+
     hasTriggeredExpand = true;
     isTransitioning = true;
+
     const seoulFace = document.querySelector('[data-target="seoul"]');
-    if (!seoulFace) { isTransitioning = false; return; }
+    if (!seoulFace) {
+      isTransitioning = false;
+      return;
+    }
+
     lenis.stop();
     expandSelectedFace(seoulFace);
   }
 
   function initCubeScrollTrigger() {
-    if (cubeScrollTrigger) { cubeScrollTrigger.kill(); cubeScrollTrigger = null; }
+    if (cubeScrollTrigger) {
+      cubeScrollTrigger.kill();
+      cubeScrollTrigger = null;
+    }
 
     cubeScrollTrigger = ScrollTrigger.create({
       trigger: introScene,
@@ -318,16 +421,22 @@ document.addEventListener("DOMContentLoaded", () => {
       scrub: 2,
       onUpdate(self) {
         if (isTransitioning) return;
+
         const p = self.progress;
         let rotation;
+
         if (p < 0.8) {
           rotation = (1 - Math.pow(1 - p / 0.8, 3)) * 540;
         } else {
           rotation = 540 + ((p - 0.8) / 0.2) * 180;
         }
+
         gsap.set(cube, { rotateY: rotation });
         gsap.set(cubeStage, { scale: 1, opacity: 1 });
-        if (p >= 0.95 && !hasTriggeredExpand) triggerAutoExpand();
+
+        if (p >= 0.95 && !hasTriggeredExpand) {
+          triggerAutoExpand();
+        }
       },
     });
   }
@@ -338,18 +447,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     exhibitWrap.classList.remove("active");
     hideAllExhibitSections();
+
     if (topBtnWrap) topBtnWrap.classList.remove("active");
 
     sideScrollSections.forEach((section) => {
       resetSideScrollSection(section);
       section.style.height = "";
+
       const inner = section.querySelector(".exhibit_inner");
       if (inner) inner.style.height = "";
+
       section.classList.remove("is_compact");
       currentX.delete(section);
     });
 
     cubeFaces.forEach((face) => face.classList.remove("is_active", "is_hidden"));
+
     isTransitioning = false;
     hasTriggeredExpand = false;
 
@@ -360,6 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
     introScene.style.opacity = "";
     introScene.style.pointerEvents = "";
     introScene.classList.remove("is_leaving");
+
     gsap.set(introScene, { clearProps: "opacity" });
 
     window.scrollTo(0, 0);
@@ -376,106 +490,118 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initCubeScrollTrigger();
 
-  window.addEventListener("scroll", () => {
-    if (!isExhibitReady) return;
-    if (!sideScrollRafId) sideScrollRafId = requestAnimationFrame(animateSideScroll);
-    updateCompactHeader();
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!isExhibitReady) return;
+
+      if (!sideScrollRafId) {
+        sideScrollRafId = requestAnimationFrame(animateSideScroll);
+      }
+
+      updateCompactHeader();
+    },
+    { passive: true }
+  );
 
   window.addEventListener("resize", () => {
-    if (!exhibitWrap.classList.contains("active")) return;
+    if (!exhibitWrap.classList.contains("active")) {
+      ScrollTrigger.refresh();
+      return;
+    }
+
     setupSideScrollSections(() => {
       sideScrollSections.forEach((section) => {
-        if (section.classList.contains("active")) resetSideScrollSection(section);
+        if (section.classList.contains("active")) {
+          resetSideScrollSection(section);
+        }
       });
+
       updateCompactHeader();
-      if (isExhibitReady && !sideScrollRafId) sideScrollRafId = requestAnimationFrame(animateSideScroll);
+
+      if (isExhibitReady && !sideScrollRafId) {
+        sideScrollRafId = requestAnimationFrame(animateSideScroll);
+      }
+
       ScrollTrigger.refresh();
     });
   });
 
   if (topBtn) {
-    topBtn.addEventListener("click", (e) => { e.preventDefault(); returnToCube(); });
+    topBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      returnToCube();
+    });
   }
 
   cubeFaces.forEach((face) => {
     face.addEventListener("click", () => {
       if (isTransitioning) return;
+
       isTransitioning = true;
       hasTriggeredExpand = true;
       lenis.stop();
       expandSelectedFace(face);
     });
-  });
 
-  // if (header) {
-  //   let lastScrollY = 0;
-  //   lenis.on("scroll", ({ scroll }) => {
-  //     if (isTransitioning) return;
-
-  //     const scrollingDown = scroll > lastScrollY;
-  //     const pastThreshold = scroll > 80;
-
-  //     if (!isMuseumReady) {
-  //       header.classList.remove("hide");
-  //       lastScrollY = scroll;
-  //       return;
-  //     }
-
-  //     if (scrollingDown && pastThreshold) {
-  //       header.classList.add("hide");
-  //     } else {
-  //       header.classList.remove("hide");
-  //     }
-
-  //     lastScrollY = scroll;
-  //   });
-  // }
-
-  cubeFaces.forEach((face) => {
     face.addEventListener("mouseenter", () => {
       const ring = document.getElementById("cursorRing");
-      if (ring) { ring.classList.add("cube-hover"); ring.textContent = "CLICK HERE !"; }
+      if (ring) {
+        ring.classList.add("cube-hover");
+        ring.textContent = "CLICK HERE !";
+      }
     });
+
     face.addEventListener("mouseleave", () => {
       const ring = document.getElementById("cursorRing");
-      if (ring) { ring.classList.remove("cube-hover"); ring.textContent = ""; }
+      if (ring) {
+        ring.classList.remove("cube-hover");
+        ring.textContent = "";
+      }
     });
   });
 
   function initMobileSlide() {
     if (window.innerWidth > 1024) return;
+
     const cubeEl = document.getElementById("cube");
     const cubePinEl = document.querySelector(".cube_pin");
     if (!cubeEl || !cubePinEl) return;
 
     cubeEl.classList.add("is_slide_mode");
+
     let currentIndex = 0;
     const faces = Array.from(cubeFaces);
     const total = faces.length;
 
     const dots = document.createElement("div");
     dots.className = "slide_dots";
+
     faces.forEach((_, i) => {
       const dot = document.createElement("span");
       if (i === 0) dot.classList.add("is_active");
+
       dot.addEventListener("click", () => goTo(i));
       dots.appendChild(dot);
     });
+
     cubePinEl.appendChild(dots);
 
     const prevBtn = document.createElement("button");
     prevBtn.className = "slide_prev";
     prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+
     const nextBtn = document.createElement("button");
     nextBtn.className = "slide_next";
     nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+
     cubePinEl.appendChild(prevBtn);
     cubePinEl.appendChild(nextBtn);
 
     function goTo(index) {
       currentIndex = (index + total) % total;
       cubeEl.style.transform = `translateX(-${currentIndex * 100}vw)`;
+
       document.querySelectorAll(".slide_dots span").forEach((dot, i) => {
         dot.classList.toggle("is_active", i === currentIndex);
       });
@@ -485,26 +611,48 @@ document.addEventListener("DOMContentLoaded", () => {
     nextBtn.addEventListener("click", () => goTo(currentIndex + 1));
 
     let startX = 0;
-    cubeEl.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
-    cubeEl.addEventListener("touchend", (e) => {
-      const diff = startX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) goTo(diff > 0 ? currentIndex + 1 : currentIndex - 1);
-    }, { passive: true });
+
+    cubeEl.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    cubeEl.addEventListener(
+      "touchend",
+      (e) => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+          goTo(diff > 0 ? currentIndex + 1 : currentIndex - 1);
+        }
+      },
+      { passive: true }
+    );
   }
 
-  if (window.innerWidth <= 1024) initMobileSlide();
+  if (window.innerWidth <= 1024) {
+    initMobileSlide();
+  }
 
-  const hashTarget = window.location.hash?.replace("#", "");
+  const rawHash = window.location.hash;
+  const hashTarget = rawHash ? rawHash.replace("#", "") : "";
+
   if (hashTarget) {
     const targetSection = document.getElementById(hashTarget);
+
     if (targetSection) {
       isTransitioning = true;
       hasTriggeredExpand = true;
       lenis.stop();
+
       const targetFace = document.querySelector(`[data-target="${hashTarget}"]`);
-      if (targetFace) expandSelectedFace(targetFace);
-      else switchToExhibit(targetSection);
+      if (targetFace) {
+        expandSelectedFace(targetFace);
+      } else {
+        switchToExhibit(targetSection);
+      }
     }
   }
-
 });
