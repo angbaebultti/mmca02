@@ -3,12 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const isMobile480 = window.innerWidth <= 480;
 
   if (isMobile480) {
-    const slides = document.querySelectorAll(".museum_mobile_slide");
-    const sections = document.querySelectorAll(".museum_wrap .museum_exhibit_section[data-museum-section]");
+    const sliderItems = document.querySelectorAll(".mobile_slider_item");
+    const sections = document.querySelectorAll(".exhibit_wrap .exhibit_section[data-museum-section]");
 
     function changeMuseum(targetMuseum) {
-      slides.forEach((slide) => {
-        slide.classList.toggle("is_active", slide.dataset.museum === targetMuseum);
+      sliderItems.forEach((item) => {
+        item.classList.toggle("is_active", item.dataset.museum === targetMuseum);
       });
       sections.forEach((section) => {
         section.classList.toggle(
@@ -18,10 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    slides.forEach((slide) => {
-      slide.addEventListener("click", () => {
-        changeMuseum(slide.dataset.museum);
-        slide.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    sliderItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        changeMuseum(item.dataset.museum);
+        item.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
       });
     });
 
@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const cube = document.getElementById("cube");
   const cubeStage = document.querySelector(".cube_stage");
   const introScene = document.querySelector(".intro_scene");
-  const museumWrap = document.getElementById("museumWrap");
-  const museumSections = document.querySelectorAll(".museum_exhibit_section");
-  const horizontalSections = document.querySelectorAll(".museum_exhibit_section.is_horizontal");
+  const exhibitWrap = document.getElementById("museumWrap");
+  const exhibitSections = document.querySelectorAll(".exhibit_section");
+  const sideScrollSections = document.querySelectorAll(".exhibit_section.side_scroll");
   const cubeFaces = document.querySelectorAll(".cube_face");
   const topBtn = document.querySelector(".top_btn a");
   const topBtnWrap = document.querySelector(".top_btn");
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("[MMCA] Lenis / GSAP / ScrollTrigger 라이브러리를 먼저 로드해주세요.");
     return;
   }
-  if (!cube || !cubeStage || !introScene || !museumWrap || !museumSections.length) {
+  if (!cube || !cubeStage || !introScene || !exhibitWrap || !exhibitSections.length) {
     console.error("[MMCA] 필수 DOM 요소를 찾지 못했습니다.");
     return;
   }
@@ -58,23 +58,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let isTransitioning = false;
   let hasTriggeredExpand = false;
-  let isMuseumReady = false;
-  let horizontalRafId = null;
+  let isExhibitReady = false;
+  let sideScrollRafId = null;
   let cubeScrollTrigger = null;
   const currentX = new WeakMap();
 
-  const HORIZONTAL_STICKY_TOP = 100;
+  const STICKY_TOP = 100;
   const NORMAL_SPEED = 0.95;
   const LAST_CARD_SPEED = 0.92;
 
   function lerp(a, b, t) { return a + (b - a) * t; }
 
-  function hideAllMuseumSections() {
-    museumSections.forEach((s) => s.classList.remove("active"));
+  function hideAllExhibitSections() {
+    exhibitSections.forEach((s) => s.classList.remove("active"));
   }
 
-  function cancelHorizontalAnimation() {
-    if (horizontalRafId) { cancelAnimationFrame(horizontalRafId); horizontalRafId = null; }
+  function cancelSideScrollAnimation() {
+    if (sideScrollRafId) { cancelAnimationFrame(sideScrollRafId); sideScrollRafId = null; }
   }
 
   function getAbsoluteTop(el) {
@@ -91,17 +91,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function resetHorizontalSection(section) {
+  function resetSideScrollSection(section) {
     if (!section) return;
-    const track = section.querySelector(".museum_h_track");
+    const track = section.querySelector(".exhibit_track");
     if (!track) return;
     track.style.transform = "translate3d(0, 0, 0)";
     currentX.set(section, 0);
   }
 
-  function resetAllHorizontalSections() {
-    horizontalSections.forEach((section) => {
-      const track = section.querySelector(".museum_h_track");
+  function resetAllSideScrollSections() {
+    sideScrollSections.forEach((section) => {
+      const track = section.querySelector(".exhibit_track");
       if (!track) return;
       track.style.transform = "translate3d(0, 0, 0)";
       currentX.set(section, 0);
@@ -109,20 +109,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function syncHorizontalLayout(section) {
+  function syncSideScrollLayout(section) {
     if (!section) return;
-    const head = section.querySelector(".museum_head");
+    const head = section.querySelector(".exhibit_head");
     if (!head) return;
 
-    const stickyHeight = Math.max(window.innerHeight - HORIZONTAL_STICKY_TOP, 0);
+    const stickyHeight = Math.max(window.innerHeight - STICKY_TOP, 0);
     const headHeight = Math.ceil(head.getBoundingClientRect().height);
-    section.style.setProperty("--museum-sticky-top", `${HORIZONTAL_STICKY_TOP}px`);
+    section.style.setProperty("--museum-sticky-top", `${STICKY_TOP}px`);
     section.style.setProperty("--museum-sticky-height", `${stickyHeight}px`);
     section.style.setProperty("--museum-head-height", `${headHeight}px`);
   }
 
-  function getHorizontalMetrics(section) {
-    const track = section.querySelector(".museum_h_track");
+  function getSideScrollMetrics(section) {
+    const track = section.querySelector(".exhibit_track");
     if (!track) return null;
 
     const maxTranslate = Math.max(track.scrollWidth - window.innerWidth, 0);
@@ -133,13 +133,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getTargetX(section) {
-    const metrics = getHorizontalMetrics(section);
+    const metrics = getSideScrollMetrics(section);
     if (!metrics) return 0;
 
     const sectionTop = getAbsoluteTop(section);
-
-    const START_OFFSET = window.innerHeight * 0.3; // 👈 핵심
-
+    const START_OFFSET = window.innerHeight * 0.3;
     const rawProgress = Math.max(window.scrollY - sectionTop - START_OFFSET, 0);
 
     const { maxTranslate, lastCardStart } = metrics;
@@ -152,38 +150,37 @@ document.addEventListener("DOMContentLoaded", () => {
     return Math.max(0, Math.min(normalProgress, maxTranslate));
   }
 
-function getHorizontalScrollHeight(section) {
-  const metrics = getHorizontalMetrics(section);
-  const head = section.querySelector(".museum_head");
-  const card = section.querySelector(".museum_exhibit_card");
+  function getSideScrollHeight(section) {
+    const metrics = getSideScrollMetrics(section);
+    const head = section.querySelector(".exhibit_head");
+    const card = section.querySelector(".card_item");
 
-  const headHeight = head ? head.getBoundingClientRect().height : 0;
-  const cardHeight = card ? card.getBoundingClientRect().height : 0;
+    const headHeight = head ? head.getBoundingClientRect().height : 0;
+    const cardHeight = card ? card.getBoundingClientRect().height : 0;
 
-  if (!metrics || metrics.maxTranslate === 0) {
-    return headHeight + cardHeight + window.innerHeight * 0.8;
+    if (!metrics || metrics.maxTranslate === 0) {
+      return headHeight + cardHeight + window.innerHeight * 0.8;
+    }
+
+    const normalDistance = metrics.lastCardStart / NORMAL_SPEED;
+    const lastCardDistance = metrics.lastCardSpan / (NORMAL_SPEED * LAST_CARD_SPEED);
+
+    return headHeight + cardHeight + normalDistance + lastCardDistance + 220;
   }
 
-  const normalDistance = metrics.lastCardStart / NORMAL_SPEED;
-  const lastCardDistance = metrics.lastCardSpan / (NORMAL_SPEED * LAST_CARD_SPEED);
-
-  /* 마지막 카드 다 본 뒤 footer로 자연스럽게 넘어가기 위한 최소 여유만 둠 */
-  return headHeight + cardHeight + normalDistance + lastCardDistance + 220;
-}
-
   function updateCompactHeader() {
-    horizontalSections.forEach((section) => {
+    sideScrollSections.forEach((section) => {
       section.classList.remove("is_compact");
     });
   }
 
-  function animateHorizontal() {
-    if (!isMuseumReady) { horizontalRafId = null; return; }
+  function animateSideScroll() {
+    if (!isExhibitReady) { sideScrollRafId = null; return; }
     let stillMoving = false;
 
-    horizontalSections.forEach((section) => {
+    sideScrollSections.forEach((section) => {
       if (!section.classList.contains("active")) return;
-      const track = section.querySelector(".museum_h_track");
+      const track = section.querySelector(".exhibit_track");
       if (!track) return;
       const target = getTargetX(section);
       const current = currentX.has(section) ? currentX.get(section) : 0;
@@ -194,31 +191,30 @@ function getHorizontalScrollHeight(section) {
     });
 
     updateCompactHeader();
-    horizontalRafId = stillMoving ? requestAnimationFrame(animateHorizontal) : null;
+    sideScrollRafId = stillMoving ? requestAnimationFrame(animateSideScroll) : null;
   }
 
-  function setupHorizontalSections(callback) {
-    horizontalSections.forEach((section) => {
+  function setupSideScrollSections(callback) {
+    sideScrollSections.forEach((section) => {
       if (!section.classList.contains("active")) return;
-      const track = section.querySelector(".museum_h_track");
+      const track = section.querySelector(".exhibit_track");
       if (!track) return;
-      syncHorizontalLayout(section);
-      resetHorizontalSection(section);
-      const totalHeight = getHorizontalScrollHeight(section);
+      syncSideScrollLayout(section);
+      resetSideScrollSection(section);
+      const totalHeight = getSideScrollHeight(section);
       section.style.height = `${totalHeight}px`;
 
-      const inner = section.querySelector(".museum_inner");
+      const inner = section.querySelector(".exhibit_inner");
       if (inner) inner.style.height = `${totalHeight}px`;
     });
     if (typeof callback === "function") callback();
   }
 
-  function switchToMuseum(targetSection) {
-    isMuseumReady = false;
-    cancelHorizontalAnimation();
+  function switchToExhibit(targetSection) {
+    isExhibitReady = false;
+    cancelSideScrollAnimation();
     if (cubeScrollTrigger) { cubeScrollTrigger.kill(); cubeScrollTrigger = null; }
 
-    // 커서 강제 초기화
     const ring = document.getElementById("cursorRing");
     if (ring) { ring.classList.remove("cube-hover"); ring.textContent = ""; }
 
@@ -232,19 +228,19 @@ function getHorizontalScrollHeight(section) {
     introScene.style.pointerEvents = "";
     introScene.classList.remove("is_leaving");
 
-    museumWrap.classList.add("active");
-    hideAllMuseumSections();
+    exhibitWrap.classList.add("active");
+    hideAllExhibitSections();
     targetSection.classList.add("active");
     targetSection.classList.remove("is_compact");
     if (topBtnWrap) topBtnWrap.classList.add("active");
 
-    setupHorizontalSections(() => {
-      resetAllHorizontalSections();
-      resetHorizontalSection(targetSection);
+    setupSideScrollSections(() => {
+      resetAllSideScrollSections();
+      resetSideScrollSection(targetSection);
 
-      const head = targetSection.querySelector(".museum_head");
+      const head = targetSection.querySelector(".exhibit_head");
       const headHeight = head ? head.getBoundingClientRect().height : 0;
-      const targetTop = Math.max(getAbsoluteTop(targetSection) - HORIZONTAL_STICKY_TOP + headHeight * 0.3, 0);
+      const targetTop = Math.max(getAbsoluteTop(targetSection) - STICKY_TOP + headHeight * 0.3, 0);
 
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
@@ -253,14 +249,14 @@ function getHorizontalScrollHeight(section) {
       lenis.scrollTo(targetTop, { immediate: true });
 
       updateCompactHeader();
-      resetHorizontalSection(targetSection);
+      resetSideScrollSection(targetSection);
 
-      isMuseumReady = true;
+      isExhibitReady = true;
       isTransitioning = false;
       lenis.start();
 
-      if (!horizontalRafId) {
-        horizontalRafId = requestAnimationFrame(animateHorizontal);
+      if (!sideScrollRafId) {
+        sideScrollRafId = requestAnimationFrame(animateSideScroll);
       }
     });
   }
@@ -269,7 +265,6 @@ function getHorizontalScrollHeight(section) {
     const targetId = face.dataset.target;
     const targetSection = document.getElementById(targetId);
 
-    // 커서 강제 초기화
     const ring = document.getElementById("cursorRing");
     if (ring) { ring.classList.remove("cube-hover"); ring.textContent = ""; }
 
@@ -280,18 +275,18 @@ function getHorizontalScrollHeight(section) {
     face.classList.add("is_active");
     cubeFaces.forEach((item) => { if (item !== face) item.classList.add("is_hidden"); });
 
-  if (window.innerWidth <= 1024) {
-  switchToMuseum(targetSection);
-  gsap.fromTo(introScene,
-    { opacity: 1 },
-    { opacity: 0, duration: 0.35, ease: "power2.out" }
-  );
-  return;
-}
+    if (window.innerWidth <= 1024) {
+      switchToExhibit(targetSection);
+      gsap.fromTo(introScene,
+        { opacity: 1 },
+        { opacity: 0, duration: 0.35, ease: "power2.out" }
+      );
+      return;
+    }
 
     const rotateY = getFaceRotation(targetId);
     gsap.timeline({
-      onStart: () => { switchToMuseum(targetSection); }
+      onStart: () => { switchToExhibit(targetSection); }
     })
       .to(cube, { rotateY, duration: 0.9, ease: "power2.inOut" })
       .to(cubeStage, {
@@ -338,17 +333,17 @@ function getHorizontalScrollHeight(section) {
   }
 
   function returnToCube() {
-    isMuseumReady = false;
-    cancelHorizontalAnimation();
+    isExhibitReady = false;
+    cancelSideScrollAnimation();
 
-    museumWrap.classList.remove("active");
-    hideAllMuseumSections();
+    exhibitWrap.classList.remove("active");
+    hideAllExhibitSections();
     if (topBtnWrap) topBtnWrap.classList.remove("active");
 
-    horizontalSections.forEach((section) => {
-      resetHorizontalSection(section);
+    sideScrollSections.forEach((section) => {
+      resetSideScrollSection(section);
       section.style.height = "";
-      const inner = section.querySelector(".museum_inner");
+      const inner = section.querySelector(".exhibit_inner");
       if (inner) inner.style.height = "";
       section.classList.remove("is_compact");
       currentX.delete(section);
@@ -382,19 +377,19 @@ function getHorizontalScrollHeight(section) {
   initCubeScrollTrigger();
 
   window.addEventListener("scroll", () => {
-    if (!isMuseumReady) return;
-    if (!horizontalRafId) horizontalRafId = requestAnimationFrame(animateHorizontal);
+    if (!isExhibitReady) return;
+    if (!sideScrollRafId) sideScrollRafId = requestAnimationFrame(animateSideScroll);
     updateCompactHeader();
   }, { passive: true });
 
   window.addEventListener("resize", () => {
-    if (!museumWrap.classList.contains("active")) return;
-    setupHorizontalSections(() => {
-      horizontalSections.forEach((section) => {
-        if (section.classList.contains("active")) resetHorizontalSection(section);
+    if (!exhibitWrap.classList.contains("active")) return;
+    setupSideScrollSections(() => {
+      sideScrollSections.forEach((section) => {
+        if (section.classList.contains("active")) resetSideScrollSection(section);
       });
       updateCompactHeader();
-      if (isMuseumReady && !horizontalRafId) horizontalRafId = requestAnimationFrame(animateHorizontal);
+      if (isExhibitReady && !sideScrollRafId) sideScrollRafId = requestAnimationFrame(animateSideScroll);
       ScrollTrigger.refresh();
     });
   });
@@ -421,7 +416,7 @@ function getHorizontalScrollHeight(section) {
       const scrollingDown = scroll > lastScrollY;
       const pastThreshold = scroll > 80;
 
-      if (!isMuseumReady) {
+      if (!isExhibitReady) {
         header.classList.remove("hide");
         lastScrollY = scroll;
         return;
@@ -431,7 +426,6 @@ function getHorizontalScrollHeight(section) {
         header.classList.add("hide");
       } else {
         header.classList.remove("hide");
-        // shrink는 common.js가 담당하므로 여기선 건드리지 않음
       }
 
       lastScrollY = scroll;
@@ -509,7 +503,7 @@ function getHorizontalScrollHeight(section) {
       lenis.stop();
       const targetFace = document.querySelector(`[data-target="${hashTarget}"]`);
       if (targetFace) expandSelectedFace(targetFace);
-      else switchToMuseum(targetSection);
+      else switchToExhibit(targetSection);
     }
   }
 
