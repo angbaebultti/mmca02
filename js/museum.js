@@ -408,29 +408,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  if (header) {
-    let lastScrollY = 0;
-    lenis.on("scroll", ({ scroll }) => {
-      if (isTransitioning) return;
+  // if (header) {
+  //   let lastScrollY = 0;
+  //   lenis.on("scroll", ({ scroll }) => {
+  //     if (isTransitioning) return;
 
-      const scrollingDown = scroll > lastScrollY;
-      const pastThreshold = scroll > 80;
+  //     const scrollingDown = scroll > lastScrollY;
+  //     const pastThreshold = scroll > 80;
 
-      if (!isExhibitReady) {
-        header.classList.remove("hide");
-        lastScrollY = scroll;
-        return;
-      }
+  //     if (!isMuseumReady) {
+  //       header.classList.remove("hide");
+  //       lastScrollY = scroll;
+  //       return;
+  //     }
 
-      if (scrollingDown && pastThreshold) {
-        header.classList.add("hide");
-      } else {
-        header.classList.remove("hide");
-      }
+  //     if (scrollingDown && pastThreshold) {
+  //       header.classList.add("hide");
+  //     } else {
+  //       header.classList.remove("hide");
+  //     }
 
-      lastScrollY = scroll;
-    });
-  }
+  //     lastScrollY = scroll;
+  //   });
+  // }
 
   cubeFaces.forEach((face) => {
     face.addEventListener("mouseenter", () => {

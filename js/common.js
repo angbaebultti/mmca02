@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       '<div class="cursor-ring" id="cursorRing">ENTER ↗</div><div class="cursor-dot" id="cursorDot"></div>'
     );
     const _ring = document.getElementById('cursorRing');
-    const _dot  = document.getElementById('cursorDot');
+    const _dot = document.getElementById('cursorDot');
     let _mx = 0, _my = 0, _rx = window.innerWidth / 2, _ry = window.innerHeight / 2;
     document.addEventListener('mousemove', (e) => {
       _mx = e.clientX; _my = e.clientY;
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       opacity: 0,
       duration: 0.6,
       ease: 'power2.inOut',
-    }, '+=0.5');
+    }, '+=0.1');
 
     fillTl.call(() => {
       gsap.set(header, { clearProps: 'transform,opacity' });
@@ -158,7 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   } else if (window.innerWidth > 480) {
-    header.classList.add('hide');
+    // museum_nav가 없는 페이지는 처음부터 헤더 보이게
+    const museumNavExists = document.querySelector('.museum_nav');
+    if (museumNavExists) {
+      header.classList.add('hide');
+    }
+    // museum_nav 없으면 아무것도 안 함 → 헤더 정상 노출
   }
-
 }); // DOMContentLoaded end

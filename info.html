@@ -46,26 +46,28 @@
       <div class="top_btn" data-cursor="light">
         <a href="#"><i class="fa-solid fa-arrow-up"></i></a>
       </div>
-
-      <header class="header">
+      <header class="header no_museum_nav">
         <div class="inner">
-          <div class="header_top">
-            <h1>
-              <a href="main.html"><img src="img/logo_icon.png" />MMCA</a>
-            </h1>
-          </div>
           <div class="nav">
             <div class="nav_bottom">
+              <div class="header_logo">
+                <h1>
+                  <a href="main.html"><img src="img/logo_icon.png" />MMCA</a>
+                </h1>
+              </div>
               <ul class="gnb_l">
                 <li><a href="info.html">VISIT</a></li>
-                <li><a href="artist_award.html">ARTIST</a></li>
-                <li><a href="#">EXPLORE</a></li>
-                <li><a href="#">PROGRAM</a></li>
                 <li><a href="museum.html">ABOUT</a></li>
+                <li><a href="artist_award.html">ARTIST</a></li>
                 <li><a href="plan.html">TICKETS</a></li>
+                <li><a href="#">PROGRAM</a></li>
+                <li><a href="#">EXPLORE</a></li>
               </ul>
               <div class="gnb_r">
                 <a href="signin.html"><span>Sign in</span></a>
+                <a href="plan.html" class="mobile_ticket_btn">
+                  <img src="img/mobile_ticket.svg" alt="ticket" />
+                </a>
                 <a href="#"
                   ><img src="img/ham_w.svg" alt="ham menu button" id="menu_btn"
                 /></a>
@@ -74,7 +76,6 @@
           </div>
         </div>
       </header>
-
       <div class="menu_overlay" id="menu">
         <div class="menu_top">
           <h1>
@@ -88,8 +89,12 @@
             <ul>
               <li><a href="#">Location</a></li>
               <li class="active"><a href="museum.html#seoul">Seoul</a></li>
-              <li class="active"><a href="museum.html#gwacheon">Gwacheon</a></li>
-              <li class="active"><a href="museum.html#deoksugung">Deoksugung</a></li>
+              <li class="active">
+                <a href="museum.html#gwacheon">Gwacheon</a>
+              </li>
+              <li class="active">
+                <a href="museum.html#deoksugung">Deoksugung</a>
+              </li>
               <li class="active"><a href="museum.html#cheonju">Cheongju</a></li>
             </ul>
           </div>
@@ -900,8 +905,9 @@
         <div class="f_bottom">
           <div class="f_logo" data-cursor="light"><span>MMCA</span></div>
           <p class="copyright">
-            © 2021 National Museum of Modern and Contemporary Art, Korea
-            All images on this site are virtually generated through AI. They are not related to real people, places, or objects.
+            © 2021 National Museum of Modern and Contemporary Art, Korea All
+            images on this site are virtually generated through AI. They are not
+            related to real people, places, or objects.
           </p>
         </div>
       </footer>
