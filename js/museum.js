@@ -413,30 +413,29 @@ function getHorizontalScrollHeight(section) {
     });
   });
 
-  if (header) {
-    let lastScrollY = 0;
-    lenis.on("scroll", ({ scroll }) => {
-      if (isTransitioning) return;
+  // if (header) {
+  //   let lastScrollY = 0;
+  //   lenis.on("scroll", ({ scroll }) => {
+  //     if (isTransitioning) return;
 
-      const scrollingDown = scroll > lastScrollY;
-      const pastThreshold = scroll > 80;
+  //     const scrollingDown = scroll > lastScrollY;
+  //     const pastThreshold = scroll > 80;
 
-      if (!isMuseumReady) {
-        header.classList.remove("hide");
-        lastScrollY = scroll;
-        return;
-      }
+  //     if (!isMuseumReady) {
+  //       header.classList.remove("hide");
+  //       lastScrollY = scroll;
+  //       return;
+  //     }
 
-      if (scrollingDown && pastThreshold) {
-        header.classList.add("hide");
-      } else {
-        header.classList.remove("hide");
-        // shrink는 common.js가 담당하므로 여기선 건드리지 않음
-      }
+  //     if (scrollingDown && pastThreshold) {
+  //       header.classList.add("hide");
+  //     } else {
+  //       header.classList.remove("hide");
+  //     }
 
-      lastScrollY = scroll;
-    });
-  }
+  //     lastScrollY = scroll;
+  //   });
+  // }
 
   cubeFaces.forEach((face) => {
     face.addEventListener("mouseenter", () => {
