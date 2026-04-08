@@ -2,20 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-<meta
-    name="description"
-    content="MMCA (National Museum of Modern and Contemporary Art) English Website Redesign Project"
-/>
-<meta
-    name="keywords"
-    content="MMCA, National Museum of Modern and Contemporary Art, museum, exhibition, web design"
-/>
+    <meta
+      name="description"
+      content="MMCA (National Museum of Modern and Contemporary Art) English Website Redesign Project"
+    />
+    <meta
+      name="keywords"
+      content="MMCA, National Museum of Modern and Contemporary Art, museum, exhibition, web design"
+    />
     <meta name="author" content="TEAM 아이조아" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="MMCA — National Museum of Modern and Contemporary Art">
-  <meta property="og:description" content="Discover Korean contemporary art at the MMCA. Explore exhibitions and plan your visit.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/angbaebultti/mmca/main/img/og_img.jpg" />
+    <meta
+      property="og:title"
+      content="MMCA — National Museum of Modern and Contemporary Art"
+    />
+    <meta
+      property="og:description"
+      content="Discover Korean contemporary art at the MMCA. Explore exhibitions and plan your visit."
+    />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/angbaebultti/mmca/main/img/og_img.jpg"
+    />
     <meta property="og:url" content="https://angbaebultti.github.io/mmca/" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -39,21 +48,22 @@
     <div class="wrap">
       <header class="header">
         <div class="inner">
-          <div class="header_top">
-            <h1>
-              <a href="main.html"><img src="img/logo_icon.png" />MMCA</a>
-            </h1>
-          </div>
           <div class="nav">
             <div class="nav_bottom">
+              <div class="header_logo">
+                <h1>
+                  <a href="main.html"><img src="img/logo_icon.png" />MMCA</a>
+                </h1>
+              </div>
               <ul class="gnb_l">
                 <li><a href="info.html">VISIT</a></li>
-                <li><a href="artist_award.html">ARTIST</a></li>
-                <li><a href="#">EXPLORE</a></li>
-                <li><a href="#">PROGRAM</a></li>
                 <li><a href="museum.html">ABOUT</a></li>
+                <li><a href="#">PROGRAM</a></li>
+                <li><a href="#">EXPLORE</a></li>
+                <li><a href="artist_award.html">ARTIST</a></li>
                 <li><a href="plan.html">TICKETS</a></li>
               </ul>
+              <!-- ..,gnb_l -->
               <div class="gnb_r">
                 <a href="signin.html"><span>Sign in</span></a>
                 <a href="plan.html" class="mobile_ticket_btn">
@@ -63,12 +73,43 @@
                   ><img src="img/ham_w.svg" alt="ham menu button" id="menu_btn"
                 /></a>
               </div>
+              <!-- //.gnb_r -->
             </div>
           </div>
+        </div>
 
+        <div class="museum_nav">
+          <div class="row_top">
+            <a href="museum.html#seoul">
+              <div class="item seoul">
+                <span class="text">SEOUL</span>
+                <div class="bg"></div>
+              </div>
+            </a>
+            <a href="">
+              <div class="item deoksugung">
+                <span class="text">DEOKSUGUNG</span>
+                <div class="bg"></div>
+              </div>
+            </a>
+          </div>
+          <div class="row_bottom">
+            <a href="museum.html#gwacheon">
+              <div class="item gwacheon">
+                <span class="text">GWACHEON</span>
+                <div class="bg"></div>
+              </div>
+            </a>
+            <a href="museum.html#cheongju">
+              <div class="item cheongju">
+                <span class="text">CHEONGJU</span>
+                <div class="bg"></div>
+              </div>
+            </a>
+          </div>
         </div>
       </header>
-       
+
       <div class="menu_overlay" id="menu">
         <div class="menu_top">
           <h1>
@@ -82,9 +123,15 @@
             <ul>
               <li><a href="#">Location</a></li>
               <li class="active"><a href="museum.html#seoul">Seoul</a></li>
-              <li class="active"><a href="museum.html#gwacheon">Gwacheon</a></li>
-              <li class="active"><a href="museum.html#deoksugung">Deoksugung</a></li>
-              <li class="active"><a href="museum.html#cheongju">Cheongju</a></li>
+              <li class="active">
+                <a href="museum.html#gwacheon">Gwacheon</a>
+              </li>
+              <li class="active">
+                <a href="museum.html#deoksugung">Deoksugung</a>
+              </li>
+              <li class="active">
+                <a href="museum.html#cheongju">Cheongju</a>
+              </li>
             </ul>
           </div>
           <div class="menu_col">
@@ -225,7 +272,6 @@
       </div>
       <!-- //.horizontal_scroll_wrapper -->
 
-      
       <!-- =====================
     2번: History 섹션
   ===================== -->
@@ -637,8 +683,9 @@
           </div>
           <!-- //.f_logo -->
           <p class="copyright">
-           © 2026 IZoa Team. MMCA Website Redesign Concept.
-           All images on this site are virtually generated through AI. They are not related to real people, places, or objects.
+            © 2026 IZoa Team. MMCA Website Redesign Concept. All images on this
+            site are virtually generated through AI. They are not related to
+            real people, places, or objects.
           </p>
         </div>
         <!-- //.f_bottom -->
