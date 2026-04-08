@@ -324,6 +324,8 @@ document.addEventListener("DOMContentLoaded", () => {
       xPercent: isMobile ? 0 : 30,
     });
 
+    const artistReleaseHold = 900;
+
     function getScrollAmount() {
       const track = qs(".artist_track");
       if (!track) return 0;
@@ -346,11 +348,12 @@ document.addEventListener("DOMContentLoaded", () => {
       scrollTrigger: {
         trigger: ".artist_prize",
         start: "top 10%",
-        end: () => "+=" + Math.abs(getScrollAmount()),
+        end: () => "+=" + (Math.abs(getScrollAmount()) + artistReleaseHold),
         scrub: 1.2,
         pin: true,
         anticipatePin: 1,
         pinSpacing: true,
+        invalidateOnRefresh: true,
       },
     });
 
@@ -392,7 +395,11 @@ document.addEventListener("DOMContentLoaded", () => {
       ease: "none",
       duration: 1,
     });
-    masterTL.to({}, { duration: 0.1 });
+    masterTL.to({}, { duration: 0.6 });
+
+    window.addEventListener("load", () => {
+      ScrollTrigger.refresh();
+    });
   }
 
   /* =========================================================

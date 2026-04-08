@@ -5,6 +5,10 @@
   display: none;
 }
 
+.news_mobile_tabs {
+  display: none;
+}
+
 @media screen and (max-width: 1024px) {
   /* ===== CURSOR 복원 ===== */
   * {
