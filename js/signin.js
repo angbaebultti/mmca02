@@ -74,13 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.setItem("userEmail", matched.email);
       sessionStorage.setItem("userName", userName);
 
-      // 토스트 표시
-      showToast("Welcome, " + userName + "!");
+      alert("Welcome, " + userName + "!");
 
-      // 1.5초 후 이동
       setTimeout(() => {
         location.href = "main.html";
-      }, 2000);
+      }, 700);
 
     } else {
       const errorMsg = document.querySelector(".error_msg");
